@@ -6,10 +6,10 @@ app.use(cors("*"));
 app.use(express.json());
 
 import userRouter from "./router/user.mjs";
+import doctorRouter from "./router/doctor.mjs";
 
 app.use("/users", userRouter);
-app.use("/users", userRouter);
-app.use("/doctor", userRouter);
+app.use("/doctor", doctorRouter);
 
 app.all("*", async (req, res) => {
   throw Error("route is not exists");

@@ -1,10 +1,10 @@
 import Doctor from "../model/doctor.mjs";
 import jwt from "jsonwebtoken";
-import hashedPassword from "../password/password.mjs";
+import { hashedPassword } from "../password/password.mjs";
 
 const doctorSignUp = async (req, res) => {
   try {
-    const doctor = Doctor.create({
+    await Doctor.create({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -15,26 +15,33 @@ const doctorSignUp = async (req, res) => {
       shedule: req.body.shedule,
       degree: req.body.degree,
       address: req.body.address,
-    }).then((doctor) => {
-      res.json({
-        user: user,
-        message: "doctor create",
+    })
+      .then((d) => {
+        return res.json({
+          doctor: d,
+          message: "doctor create",
+        });
+      })
+      .catch((err) => {
+        return res.json({
+          error: err,
+        });
       });
-    });
   } catch (err) {
     return res.json(err);
   }
-
-  let token = jwt.sign(
-    {
-      id: Doctor.id,
-      email: Doctor.email,
-      name: Doctor.name,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-  res.json(token);
 };
 
-export { doctorSignUp };
+const doctorAppointment = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+    res.json({
+      doctor: doctor,
+      message: "Get Doctor Appointment",
+    });
+  } catch (err) {
+    res.json(err);
+  }
+};
+
+export { doctorSignUp, doctorAppointment };

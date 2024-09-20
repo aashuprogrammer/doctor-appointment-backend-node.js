@@ -18,7 +18,7 @@ const DoctorSchema = new mongoose.Schema({
   },
   dob: { type: String, required: true },
   img: { type: String },
-  shedule: { type: String, required: true },
+  shedule: { type: String },
   degree: { type: String, required: true },
   address: { type: String, required: true },
   created_at: {
