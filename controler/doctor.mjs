@@ -1,6 +1,6 @@
 import Doctor from "../model/doctor.mjs";
-import jwt from "jsonwebtoken";
-import { hashedPassword } from "../password/password.mjs";
+import { hashedPassword, verifyPass } from "../password/password.mjs";
+import createToken from "../middlware/token.mjs";
 
 const doctorSignUp = async (req, res) => {
   try {
@@ -34,7 +34,7 @@ const doctorSignUp = async (req, res) => {
 
 const doctorAppointment = async (req, res) => {
   try {
-    const doctor = await Doctor.findById(req.params.id);
+    const doctor = await Doctor.findById(req.body.id);
     res.json({
       doctor: doctor,
       message: "Get Doctor Appointment",
@@ -44,4 +44,22 @@ const doctorAppointment = async (req, res) => {
   }
 };
 
-export { doctorSignUp, doctorAppointment };
+const doctorLogin = async (req, res) => {
+  try {
+    const login = await Doctor.findOne({
+      email: req.body.email,
+    });
+    const pass = await verifyPass(req.body.password, login.password);
+
+    if (!pass) {
+      return res.json("password is wrong");
+    }
+    const token = createToken(login._id, login.email, login.name);
+
+    res.json(token);
+  } catch (err) {
+    return res.json(err);
+  }
+};
+
+export { doctorSignUp, doctorAppointment, doctorLogin };

@@ -58,11 +58,17 @@ const getUserById = async (req, res) => {
   }
 };
 
-// const GetAllUser = async(req,res) =>{
-//   try{
-//     const user = await User.fi
-//   }
-// }
+const getAllUser = async (req, res) => {
+  try {
+    const user = await User.find(req.body).select("-password");
+    res.json({
+      user: user,
+      message: "Get All User",
+    });
+  } catch (err) {
+    res.json(err);
+  }
+};
 
 const deleteUser = async (req, res) => {
   try {
@@ -77,10 +83,14 @@ const deleteUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  const { name } = req.body;
   try {
-    // await User.updateOne();
-    // const user = await User.findById(req.params.id);
-    const user = await User.updateOne(req.body.name, req.body.email);
+    const user = await User.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        name: req.body.name,
+      }
+    );
     res.json({
       user: user,
       message: "User Update",
@@ -89,4 +99,11 @@ const updateUser = async (req, res) => {
     res.json(err);
   }
 };
-export { userSignUp, userLogin, getUserById, deleteUser, updateUser };
+export {
+  userSignUp,
+  userLogin,
+  getUserById,
+  deleteUser,
+  updateUser,
+  getAllUser,
+};
