@@ -16,7 +16,7 @@ app.use("/category", categoryRouter);
 app.use("/appointment", appointmentRouter);
 app.use("/upload", uploadRoute);
 app.all("*", async (req, res) => {
-  throw Error("route is not exists");
+  res.send("route is not exsits");
 });
 
 export default app;
